@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:14.18-bookworm
+    environment:
+      POSTGRES_DB: "scihubdb"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "passwd"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - scihubdb-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d scihubdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - postgres
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:7.5
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@hehehe.com"
+      PGADMIN_DEFAULT_PASSWORD: "passwd"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - postgres
+
+volumes:
+  scihubdb-data:
+  pgadmin-data:
+
+
+networks:
+  postgres:
+    driver: bridge
