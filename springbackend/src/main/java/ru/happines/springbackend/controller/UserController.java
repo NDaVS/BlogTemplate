@@ -1,10 +1,8 @@
 package ru.happines.springbackend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.happines.springbackend.dto.CreateUserDTO;
 import ru.happines.springbackend.model.User;
 import ru.happines.springbackend.service.UserService;
 
@@ -25,5 +23,9 @@ public class UserController {
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
         return userService.findById(id);
+    }
+    @PostMapping
+    public User createUser(@RequestBody CreateUserDTO userDTO) {
+        return userService.create(userDTO);
     }
 }

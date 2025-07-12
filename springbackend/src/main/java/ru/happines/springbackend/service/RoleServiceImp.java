@@ -3,7 +3,10 @@ package ru.happines.springbackend.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.happines.springbackend.model.Role;
+import ru.happines.springbackend.model.User;
+import ru.happines.springbackend.model.enums.RoleType;
 import ru.happines.springbackend.repository.RoleRepository;
+import ru.happines.springbackend.repository.UserRepository;
 
 import java.util.List;
 
@@ -11,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleServiceImp implements RoleService {
     private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Role findById(long id) {
@@ -18,7 +22,16 @@ public class RoleServiceImp implements RoleService {
     }
 
     @Override
-    public List<String> findAllNames() {
+    public List<RoleType> findAllNames() {
         return roleRepository.findAll().stream().map(Role::getName).toList();
+    }
+
+    @Override
+    public Role setRole(long userId, RoleType roleType) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("Role ID is not found"));
+        Role role = roleRepository.findByName(roleType).orElseThrow(() -> new IllegalStateException("Role NAME is not found"));
+        user.setRole(role);
+        userRepository.save(user);
+        return role;
     }
 }
