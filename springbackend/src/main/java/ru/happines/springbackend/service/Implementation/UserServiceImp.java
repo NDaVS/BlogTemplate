@@ -1,4 +1,4 @@
-package ru.happines.springbackend.service;
+package ru.happines.springbackend.service.Implementation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,6 +7,7 @@ import ru.happines.springbackend.model.User;
 import ru.happines.springbackend.model.enums.RoleType;
 import ru.happines.springbackend.repository.RoleRepository;
 import ru.happines.springbackend.repository.UserRepository;
+import ru.happines.springbackend.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;

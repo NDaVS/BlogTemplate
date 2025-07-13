@@ -1,40 +1,50 @@
 package ru.happines.springbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.happines.springbackend.dto.CreateUserDTO;
 
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "scihub_users")
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(nullable = false)
     private String username;
+
     @Column(nullable = false)
     private String hashedPassword;
+
     @Column(nullable = false)
     private String email;
+
     @Column(nullable = false)
     private String firstName;
+
     @Column(nullable = false)
     private String lastName;
+
     @Column(nullable = false)
     private String middleName;
-    @ManyToOne(fetch =  FetchType.LAZY, optional = false)
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     @JsonBackReference
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Post> posts;
+
 
     public User(CreateUserDTO userDTO) {
         username = userDTO.getUsername();

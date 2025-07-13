@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface RoleService {
     Role findById(long id);
+
     List<RoleType> findAllNames();
+
     Role setRole(long userId, RoleType roleType);
 }
