@@ -24,7 +24,7 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, size);
         Page<Post> posts = postService.findAll(pageable);
 
         return ResponseEntity.ok(posts);
@@ -41,7 +41,7 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, size);
         Page<Post> posts = postService.findAllByUserId(userId, pageable);
         return ResponseEntity.ok(posts);
     }
