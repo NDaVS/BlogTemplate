@@ -1,4 +1,4 @@
-package ru.happines.springbackend.config;
+package ru.happines.springbackend.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
