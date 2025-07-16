@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: springbackend
+
+  datasource:
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+    url: jdbc:postgresql://localhost:5432/scihubdb
+    username: admin
+    password: passwd
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
