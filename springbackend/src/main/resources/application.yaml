@@ -16,3 +16,24 @@ spring:
 
   jackson:
     property-naming-strategy: SNAKE_CASE
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_CLIENT_SECRET}
+            redirectUri: "http://localhost:9090/api/v1/login/oauth2/code/google"
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        security: DEBUG
+
+
+security:
+  jwt:
+    secret: "12311111111111111111111111111111111111111111111111111111111111111111145"
+    tokenExpirationTime: 1000
+    refreshTokenExpirationTime: 10000
