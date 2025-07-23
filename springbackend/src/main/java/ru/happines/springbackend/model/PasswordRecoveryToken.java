@@ -2,6 +2,7 @@ package ru.happines.springbackend.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "password_recovery_tokens")
 @Data
+@NoArgsConstructor
 public class PasswordRecoveryToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
