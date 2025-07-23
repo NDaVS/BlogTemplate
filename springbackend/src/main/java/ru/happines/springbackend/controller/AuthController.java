@@ -4,10 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.happines.springbackend.dto.auth.RecoveryPasswordDTO;
 import ru.happines.springbackend.dto.auth.ResetPasswordDTO;
 import ru.happines.springbackend.exception.ServiceException;
 import ru.happines.springbackend.service.AuthService;
@@ -20,9 +18,29 @@ public class AuthController {
 
     @PostMapping("password/reset")
     public ResponseEntity<Void> resetPassword(HttpServletRequest request,
-                                                @RequestBody ResetPasswordDTO resetPasswordDTO) throws ServiceException {
-
+                                              @RequestBody ResetPasswordDTO resetPasswordDTO) throws ServiceException {
         authService.resetPassword(request, resetPasswordDTO);
+
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/password/recovery")
+    public ResponseEntity<Void> recoveryPassword(@RequestParam String username) throws ServiceException {
+        authService.sendPasswordRecoveryToken(username);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("password/recovery/validate")
+    public ResponseEntity<Void> validatePassword(@RequestParam String token) throws ServiceException {
+        authService.validateRecoveryToken(token);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
+    @PutMapping("/password/recovery")
+    public ResponseEntity<Void> recoveryPassword(@RequestBody RecoveryPasswordDTO recoveryPasswordDTO) throws ServiceException {
+        authService.recoveryPassword(recoveryPasswordDTO);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

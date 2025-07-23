@@ -33,6 +33,9 @@ logging:
 
 
 security:
+  recovery:
+    user:
+      tokenExpirationTime: 900 * 2
   jwt:
     secret: "12311111111111111111111111111111111111111111111111111111111111111111145"
     tokenExpirationTime: 1000
