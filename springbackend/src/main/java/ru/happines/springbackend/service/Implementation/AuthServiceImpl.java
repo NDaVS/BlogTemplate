@@ -91,7 +91,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.setHashedPassword(encoder.encode(recoveryPasswordDTO.getNewPassword()));
+
         userRepository.save(user);
+        passwordRecoveryTokenRepository.delete(token);
     }
 
     private PasswordRecoveryToken getPasswordToken(String recoveryToken) throws ServiceException {
