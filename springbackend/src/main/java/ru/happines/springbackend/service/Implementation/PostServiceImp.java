@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.happines.springbackend.dto.PostDTO;
+import ru.happines.springbackend.dto.request.PostDTO;
 import ru.happines.springbackend.model.Post;
 import ru.happines.springbackend.model.enums.PostStatus;
 import ru.happines.springbackend.repository.PostRepository;

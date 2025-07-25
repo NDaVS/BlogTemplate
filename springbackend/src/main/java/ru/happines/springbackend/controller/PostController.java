@@ -3,12 +3,12 @@ package ru.happines.springbackend.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.happines.springbackend.dto.PostDTO;
+import ru.happines.springbackend.dto.request.PostDTO;
+import ru.happines.springbackend.dto.response.PostResponseDTO;
+import ru.happines.springbackend.mapper.PostMapper;
 import ru.happines.springbackend.model.Post;
 import ru.happines.springbackend.model.enums.PostStatus;
 import ru.happines.springbackend.service.PostService;
@@ -18,55 +18,59 @@ import ru.happines.springbackend.service.PostService;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final PostMapper postMapper;
 
     @GetMapping
-    public ResponseEntity<Page<Post>> findAll(
+    public ResponseEntity<Page<PostResponseDTO>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Post> posts = postService.findAll(pageable);
+        Page<Post> posts = postService.findAll(PageRequest.of(page, size));
 
-        return ResponseEntity.ok(posts);
+        return ResponseEntity.ok(posts.map(postMapper::toDto)); // проверить формат ответа
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(postService.findById(id));
+    public ResponseEntity<PostResponseDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(postMapper.toDto(postService.findById(id)));
     }
 
     @GetMapping("/by/user/{userId}")
-    public ResponseEntity<Page<Post>> findByUserId(
-            @PathVariable long userId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Post> posts = postService.findAllByUserId(userId, pageable);
-        return ResponseEntity.ok(posts);
+    public ResponseEntity<Page<PostResponseDTO>> findByUserId(@PathVariable long userId,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size) {
+        Page<Post> posts = postService.findAllByUserId(userId, PageRequest.of(page, size));
+
+        return ResponseEntity.ok(posts.map(postMapper::toDto));// проверить формат ответа
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody PostDTO postDTO) {
-        Post post = postService.create(postDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(post);
+    public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostDTO postDTO) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(postMapper.toDto(postService.create(postDTO)));
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable long postId, @RequestBody PostDTO postDTO) {
-        Post post = postService.update(postId, postDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(post);
+    public ResponseEntity<PostResponseDTO> updatePost(@PathVariable long postId,
+                                                      @RequestBody PostDTO postDTO) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(postMapper.toDto(postService.update(postId, postDTO)));
     }
 
     @PatchMapping("/moderate/{postId}")
-    public ResponseEntity<Post> modifyPost(@PathVariable long postId, @RequestParam("status") PostStatus status) {
-        Post post = postService.moderate(postId, status);
-        return ResponseEntity.status(HttpStatus.OK).body(post);
+    public ResponseEntity<PostResponseDTO> modifyPost(@PathVariable long postId,
+                                                      @RequestParam("status") PostStatus status) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(postMapper.toDto(postService.moderate(postId, status)));
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable long postId) {
         postService.delete(postId);
+
         return ResponseEntity.noContent().build();
     }
 }

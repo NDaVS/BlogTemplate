@@ -1,6 +1,6 @@
 package ru.happines.springbackend.service;
 
-import ru.happines.springbackend.dto.CreateUserDTO;
+import ru.happines.springbackend.dto.request.CreateUserDTO;
 import ru.happines.springbackend.exception.ServiceException;
 import ru.happines.springbackend.model.User;
 

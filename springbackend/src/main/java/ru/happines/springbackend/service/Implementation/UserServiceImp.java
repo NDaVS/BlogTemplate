@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.happines.springbackend.dto.CreateUserDTO;
+import ru.happines.springbackend.dto.request.CreateUserDTO;
 import ru.happines.springbackend.exception.ErrorCode;
 import ru.happines.springbackend.exception.ServiceException;
 import ru.happines.springbackend.model.User;

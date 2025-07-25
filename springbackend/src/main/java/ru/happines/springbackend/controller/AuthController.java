@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.happines.springbackend.dto.CreateUserDTO;
-import ru.happines.springbackend.dto.auth.RecoveryPasswordDTO;
-import ru.happines.springbackend.dto.auth.ResetPasswordDTO;
+import ru.happines.springbackend.dto.request.CreateUserDTO;
+import ru.happines.springbackend.dto.request.auth.RecoveryPasswordDTO;
+import ru.happines.springbackend.dto.request.auth.ResetPasswordDTO;
+import ru.happines.springbackend.dto.response.UserResponseDTO;
 import ru.happines.springbackend.exception.ServiceException;
+import ru.happines.springbackend.mapper.UserMapper;
 import ru.happines.springbackend.model.User;
 import ru.happines.springbackend.service.AuthService;
 
@@ -17,12 +19,13 @@ import ru.happines.springbackend.service.AuthService;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final UserMapper userMapper;
 
     @PostMapping("signup")
-    public ResponseEntity<String> signup(@RequestBody CreateUserDTO userDTO) throws ServiceException {
+    public ResponseEntity<UserResponseDTO> signup(@RequestBody CreateUserDTO userDTO) throws ServiceException {
         User user = authService.signup(userDTO);
 
-        return ResponseEntity.ok(user.getFullName());
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 
     @PostMapping("password/reset")

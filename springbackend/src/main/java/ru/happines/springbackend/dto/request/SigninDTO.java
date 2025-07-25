@@ -1,4 +1,4 @@
-package ru.happines.springbackend.dto;
+package ru.happines.springbackend.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -12,7 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import ru.happines.springbackend.dto.RefreshTokenDTO;
+import ru.happines.springbackend.dto.request.RefreshTokenDTO;
 import ru.happines.springbackend.security.exception.AuthMethodNotSupportedException;
 import ru.happines.springbackend.utils.JsonUtils;
 

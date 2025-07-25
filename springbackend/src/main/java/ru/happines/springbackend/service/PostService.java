@@ -2,7 +2,7 @@ package ru.happines.springbackend.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.happines.springbackend.dto.PostDTO;
+import ru.happines.springbackend.dto.request.PostDTO;
 import ru.happines.springbackend.model.Post;
 import ru.happines.springbackend.model.enums.PostStatus;
 

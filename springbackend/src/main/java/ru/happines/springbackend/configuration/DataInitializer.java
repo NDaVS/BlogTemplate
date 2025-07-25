@@ -3,7 +3,7 @@ package ru.happines.springbackend.configuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import ru.happines.springbackend.dto.CreateUserDTO;
+import ru.happines.springbackend.dto.request.CreateUserDTO;
 import ru.happines.springbackend.model.Role;
 import ru.happines.springbackend.model.User;
 import ru.happines.springbackend.model.enums.RoleType;

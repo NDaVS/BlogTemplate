@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.happines.springbackend.dto.PostDTO;
+import ru.happines.springbackend.dto.request.PostDTO;
 import ru.happines.springbackend.model.enums.PostStatus;
 
 import java.util.List;

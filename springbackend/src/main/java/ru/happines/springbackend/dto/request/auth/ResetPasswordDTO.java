@@ -1,12 +1,12 @@
-package ru.happines.springbackend.dto.auth;
+package ru.happines.springbackend.dto.request.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RecoveryPasswordDTO {
-    private String recoveryToken;
+public class ResetPasswordDTO {
+    private String oldPassword;
     private String newPassword;
     private String confirmNewPassword;
 }

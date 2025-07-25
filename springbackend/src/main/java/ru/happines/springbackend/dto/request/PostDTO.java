@@ -1,4 +1,4 @@
-package ru.happines.springbackend.dto;
+package ru.happines.springbackend.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

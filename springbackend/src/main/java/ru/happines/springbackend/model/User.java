@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.happines.springbackend.dto.CreateUserDTO;
+import ru.happines.springbackend.dto.request.CreateUserDTO;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)

@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import ru.happines.springbackend.dto.CreateUserDTO;
+import ru.happines.springbackend.dto.request.CreateUserDTO;
 import ru.happines.springbackend.exception.ErrorCode;
 import ru.happines.springbackend.exception.ServiceException;
 import ru.happines.springbackend.model.User;
