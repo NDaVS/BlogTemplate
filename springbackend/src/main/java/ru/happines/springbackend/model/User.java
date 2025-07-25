@@ -28,6 +28,9 @@ public class User {
     private String email;
 
     @Column(nullable = false)
+    private boolean isEmailVerified;
+
+    @Column(nullable = false)
     private String firstName;
 
     @Column(nullable = false)
@@ -53,7 +56,7 @@ public class User {
         firstName = userDTO.getFirstName();
         lastName = userDTO.getLastName();
         middleName = userDTO.getMiddleName();
-
+        isEmailVerified = false;
     }
 
     public String getFullName() {

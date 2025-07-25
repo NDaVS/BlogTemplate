@@ -5,20 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "password_recovery_tokens")
-@Setter
+@Table(name = "email_verification_tokens")
 @Getter
-public class PasswordRecoveryToken extends AbstractToken {
+@Setter
+public class EmailVerificationToken extends AbstractToken {
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    public PasswordRecoveryToken(String token, User user) {
+
+    public EmailVerificationToken(String token, User user) {
         super(token);
         this.user = user;
     }
 
-    public PasswordRecoveryToken() {
+    public EmailVerificationToken() {
         super("");
     }
 }

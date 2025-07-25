@@ -6,17 +6,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.happines.springbackend.dto.CreateUserDTO;
 import ru.happines.springbackend.dto.auth.RecoveryPasswordDTO;
 import ru.happines.springbackend.dto.auth.ResetPasswordDTO;
 import ru.happines.springbackend.exception.ErrorCode;
 import ru.happines.springbackend.exception.ServiceException;
+import ru.happines.springbackend.model.AbstractToken;
+import ru.happines.springbackend.model.EmailVerificationToken;
 import ru.happines.springbackend.model.PasswordRecoveryToken;
 import ru.happines.springbackend.model.User;
+import ru.happines.springbackend.repository.EmailVerificationTokenRepository;
 import ru.happines.springbackend.repository.PasswordRecoveryTokenRepository;
 import ru.happines.springbackend.repository.UserRepository;
 import ru.happines.springbackend.security.jwt.JwtTokenProvider;
 import ru.happines.springbackend.service.AuthService;
+import ru.happines.springbackend.service.UserService;
 
+import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -24,18 +30,29 @@ import java.util.UUID;
 public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordRecoveryTokenRepository passwordRecoveryTokenRepository;
     private final PasswordEncoder encoder;
+    private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
 
     public AuthServiceImpl(JwtTokenProvider tokenProvider,
+                           UserService userService,
                            UserRepository userRepository,
-                           PasswordRecoveryTokenRepository passwordRecoveryTokenRepository) {
+                           PasswordRecoveryTokenRepository passwordRecoveryTokenRepository,
+                           EmailVerificationTokenRepository emailVerificationTokenRepository) {
         this.tokenProvider = tokenProvider;
+        this.userService = userService;
         this.userRepository = userRepository;
         this.passwordRecoveryTokenRepository = passwordRecoveryTokenRepository;
+        this.emailVerificationTokenRepository = emailVerificationTokenRepository;
         this.encoder = new BCryptPasswordEncoder();
+    }
+
+    @Override
+    public User signup(CreateUserDTO userDTO)  {
+        return userService.create(userDTO);
     }
 
     @Override
@@ -65,6 +82,16 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void validateRecoveryToken(String rawToken) throws ServiceException {
         validateRawRecoveryToken(rawToken);
+    }
+
+    @Override
+    public void validateEmail(String rawToken) throws ServiceException {
+        EmailVerificationToken emailVerificationToken = validateRawEmailVerificationToken(rawToken);
+        User user = emailVerificationToken.getUser();
+        user.setEmailVerified(true);
+
+        userRepository.save(user);
+        emailVerificationTokenRepository.delete(emailVerificationToken);
     }
 
     private User findUserByUsername(String username) throws ServiceException {
@@ -102,7 +129,13 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new ServiceException(ErrorCode.BAD_REQUEST_PARAMS, "Invalid recovery token"));
     }
 
-    private boolean isRecoveryTokenExpired(PasswordRecoveryToken token) {
+    private EmailVerificationToken getEmailToken(String rawToken) throws ServiceException {
+        return emailVerificationTokenRepository
+                .findByToken(rawToken)
+                .orElseThrow(() -> new ServiceException(ErrorCode.BAD_REQUEST_PARAMS, "Invalid email token"));
+    }
+
+    private boolean isTokenExpired(AbstractToken token) {
         final Calendar cal = Calendar.getInstance();
 
         return token.getExpiryDate().before(cal.getTime());
@@ -111,8 +144,18 @@ public class AuthServiceImpl implements AuthService {
     private PasswordRecoveryToken validateRawRecoveryToken(String rawToken) throws ServiceException {
         PasswordRecoveryToken token = getPasswordToken(rawToken);
 
-        if (isRecoveryTokenExpired(token)) {
-            throw new ServiceException(ErrorCode.RECOVERY_TOKEN_EXPIRED, "Token is expired");
+        if (isTokenExpired(token)) {
+            throw new ServiceException(ErrorCode.TOKEN_EXPIRED, "Token is expired");
+        }
+
+        return token;
+    }
+
+    private EmailVerificationToken validateRawEmailVerificationToken(String rawToken) throws ServiceException {
+        EmailVerificationToken token  = getEmailToken(rawToken);
+
+        if (isTokenExpired(token)) {
+            throw new ServiceException(ErrorCode.TOKEN_EXPIRED, "Token is expired");
         }
 
         return token;
