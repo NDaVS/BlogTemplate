@@ -22,7 +22,6 @@ import ru.happines.springbackend.security.jwt.JwtTokenProvider;
 import ru.happines.springbackend.service.AuthService;
 import ru.happines.springbackend.service.UserService;
 
-import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -51,8 +50,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User signup(CreateUserDTO userDTO)  {
-        return userService.create(userDTO);
+    public User signup(CreateUserDTO userDTO) {
+        User user = userService.create(userDTO);
+        String rawEmailToken = generateRawToken();
+        EmailVerificationToken emailToken = new EmailVerificationToken(rawEmailToken, user);
+        emailVerificationTokenRepository.save(emailToken);
+
+        System.out.println(rawEmailToken); // дописать функционал работы с почтой
+
+        return user;
     }
 
     @Override
@@ -72,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void sendPasswordRecoveryToken(String username) throws ServiceException {
         User user = findUserByUsername(username);
-        String rawToken = generateRecoveryToken();
+        String rawToken = generateRawToken();
         PasswordRecoveryToken token = new PasswordRecoveryToken(rawToken, user);
         passwordRecoveryTokenRepository.save(token);
 
@@ -103,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
                 );
     }
 
-    private String generateRecoveryToken() {
+    private String generateRawToken() {
         return UUID.randomUUID().toString();
     }
 
@@ -152,7 +158,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private EmailVerificationToken validateRawEmailVerificationToken(String rawToken) throws ServiceException {
-        EmailVerificationToken token  = getEmailToken(rawToken);
+        EmailVerificationToken token = getEmailToken(rawToken);
 
         if (isTokenExpired(token)) {
             throw new ServiceException(ErrorCode.TOKEN_EXPIRED, "Token is expired");
