@@ -39,6 +39,7 @@ public class SecurityConfiguration {
 
     public static final String SIGNIN_ENTRY_POINT = "/auth/signin";
     public static final String SIGNUP_ENTRY_POINT = "/auth/signup";
+    public static final String AUTH_ENTRY_POINT = "/auth/**";
     public static final String SWAGGER_ENTRY_POINT = "/swagger-ui/**";
     public static final String API_DOCS_ENTRY_POINT = "/api-docs/**";
     public static final String TOKEN_REFRESH_ENTRY_POINT = "/auth/refreshToken";
@@ -78,6 +79,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(SIGNIN_ENTRY_POINT).permitAll()
                         .requestMatchers(SIGNUP_ENTRY_POINT).permitAll()
+                        .requestMatchers(AUTH_ENTRY_POINT).permitAll() // вынести смену пароля на проверку токена (см бэклог)
                         .requestMatchers(SWAGGER_ENTRY_POINT).permitAll()
                         .requestMatchers(API_DOCS_ENTRY_POINT).permitAll()
                         .requestMatchers(TOKEN_REFRESH_ENTRY_POINT).permitAll()
@@ -113,7 +115,7 @@ public class SecurityConfiguration {
     }
 
     protected TokenAuthenticationFilter buildTokenAuthenticationFilter() {
-        List<String> pathToSkip = new ArrayList<>(Arrays.asList(SIGNIN_ENTRY_POINT, SIGNUP_ENTRY_POINT,
+        List<String> pathToSkip = new ArrayList<>(Arrays.asList(SIGNIN_ENTRY_POINT, AUTH_ENTRY_POINT, SIGNUP_ENTRY_POINT,
                 SWAGGER_ENTRY_POINT, API_DOCS_ENTRY_POINT, TOKEN_REFRESH_ENTRY_POINT));
         SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathToSkip);
         TokenAuthenticationFilter filter = new TokenAuthenticationFilter(jwtTokenProvider, matcher, failureHandler);

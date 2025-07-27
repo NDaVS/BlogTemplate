@@ -13,12 +13,12 @@ public class PasswordRecoveryToken extends AbstractToken {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    public PasswordRecoveryToken(String token, User user) {
-        super(token);
+    public PasswordRecoveryToken(String token, User user, long expiryTimeToLiveInSec) {
+        super(token,  expiryTimeToLiveInSec);
         this.user = user;
     }
 
     public PasswordRecoveryToken() {
-        super("");
+        super("", 100);
     }
 }

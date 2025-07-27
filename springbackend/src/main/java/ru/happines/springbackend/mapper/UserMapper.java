@@ -24,8 +24,9 @@ public class UserMapper {
         userResponseDTO.setInitials(user.getInitials());
 
         userResponseDTO.setRole(user.getRole().getName().name());
-        userResponseDTO.setPostIds(user.getPosts().stream().map(Post::getId).collect(Collectors.toList()));
+        if (user.getPosts() != null)
+            userResponseDTO.setPostIds(user.getPosts().stream().map(Post::getId).collect(Collectors.toList()));
 
-        return  userResponseDTO;
+        return userResponseDTO;
     }
 }

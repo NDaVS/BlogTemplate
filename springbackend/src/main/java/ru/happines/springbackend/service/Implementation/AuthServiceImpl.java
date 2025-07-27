@@ -3,6 +3,7 @@ package ru.happines.springbackend.service.Implementation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,8 @@ public class AuthServiceImpl implements AuthService {
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
+    @Value("${spring.security.recovery.user.tokenExpirationTime}")
+    private Long tokenExpirationTime;
 
     public AuthServiceImpl(JwtTokenProvider tokenProvider,
                            UserService userService,
@@ -53,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
     public User signup(CreateUserDTO userDTO) {
         User user = userService.create(userDTO);
         String rawEmailToken = generateRawToken();
-        EmailVerificationToken emailToken = new EmailVerificationToken(rawEmailToken, user);
+        EmailVerificationToken emailToken = new EmailVerificationToken(rawEmailToken, user, tokenExpirationTime);
         emailVerificationTokenRepository.save(emailToken);
 
         System.out.println(rawEmailToken); // дописать функционал работы с почтой
@@ -79,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
     public void sendPasswordRecoveryToken(String username) throws ServiceException {
         User user = findUserByUsername(username);
         String rawToken = generateRawToken();
-        PasswordRecoveryToken token = new PasswordRecoveryToken(rawToken, user);
+        PasswordRecoveryToken token = new PasswordRecoveryToken(rawToken, user, tokenExpirationTime);
         passwordRecoveryTokenRepository.save(token);
 
         System.out.println(rawToken); // дописать функционал работы с почтой

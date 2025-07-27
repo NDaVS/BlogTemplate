@@ -20,10 +20,9 @@ public class AbstractToken {
 
     private Date expiryDate;
 
-    @Value("${security.recovery.user.tokenExpirationTime}")
-    private Long expiryTimeToLiveInSec;
 
-    public AbstractToken(String token) {
+
+    public AbstractToken(String token, long expiryTimeToLiveInSec) {
         this.token = token;
         this.expiryDate = new Date(System.currentTimeMillis() + expiryTimeToLiveInSec * 1000);
     }

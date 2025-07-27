@@ -17,6 +17,9 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
   security:
+    recovery:
+      user:
+        tokenExpirationTime: 1800
     oauth2:
       client:
         registration:
@@ -33,9 +36,6 @@ logging:
 
 
 security:
-  recovery:
-    user:
-      tokenExpirationTime: 900 * 2
   jwt:
     secret: "12311111111111111111111111111111111111111111111111111111111111111111145"
     tokenExpirationTime: 1000
