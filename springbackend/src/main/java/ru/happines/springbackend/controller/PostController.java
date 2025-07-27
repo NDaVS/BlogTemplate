@@ -3,6 +3,7 @@ package ru.happines.springbackend.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<Post> posts = postService.findAll(PageRequest.of(page, size));
+        Page<Post> posts = postService.findAll(PageRequest.of(page, size, Sort.by("createdAt").descending()));
 
         return ResponseEntity.ok(posts.map(postMapper::toDto)); // проверить формат ответа
     }
@@ -39,7 +40,7 @@ public class PostController {
     public ResponseEntity<Page<PostResponseDTO>> findByUserId(@PathVariable long userId,
                                                               @RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
-        Page<Post> posts = postService.findAllByUserId(userId, PageRequest.of(page, size));
+        Page<Post> posts = postService.findAllByUserId(userId, PageRequest.of(page, size, Sort.by("createdAt").descending()));
 
         return ResponseEntity.ok(posts.map(postMapper::toDto));// проверить формат ответа
     }
