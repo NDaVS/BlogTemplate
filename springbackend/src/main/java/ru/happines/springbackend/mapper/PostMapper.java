@@ -6,7 +6,7 @@ import ru.happines.springbackend.model.Post;
 
 @Component
 public class PostMapper {
-    public PostResponseDTO toDto(Post post){
+    public PostResponseDTO toDto(Post post) {
         PostResponseDTO postResponseDTO = new PostResponseDTO();
         postResponseDTO.setId(post.getId());
         postResponseDTO.setStatus(post.getStatus().toString());
@@ -16,6 +16,9 @@ public class PostMapper {
 
         postResponseDTO.setOwner_username(post.getUser().getUsername());
         postResponseDTO.setOwner_initials(post.getUser().getInitials());
+
+        postResponseDTO.setCreatedAt(post.getCreatedAt());
+        postResponseDTO.setUpdatedAt(post.getUpdatedAt());
 
         return postResponseDTO;
     }

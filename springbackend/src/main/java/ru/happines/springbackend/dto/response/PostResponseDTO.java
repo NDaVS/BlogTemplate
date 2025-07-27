@@ -2,6 +2,7 @@ package ru.happines.springbackend.dto.response;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -13,4 +14,6 @@ public class PostResponseDTO {
     private String content;
     private String owner_username;
     private String owner_initials;
+    private Date createdAt;
+    private Date updatedAt;
 }

@@ -36,7 +36,7 @@ public class PostServiceImp implements PostService {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("\"There is no post with id" + postId)
         );
-        post.Update(postDTO);
+        post.update(postDTO);
         postRepository.save(post);
 
         return post;

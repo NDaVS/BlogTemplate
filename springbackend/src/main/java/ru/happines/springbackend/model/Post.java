@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import ru.happines.springbackend.dto.request.PostDTO;
 import ru.happines.springbackend.model.enums.PostStatus;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,12 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(nullable = false, name = "created_at")
+    private Date createdAt;
+
+    @Column(nullable = false, name = "updated_at")
+    private Date updatedAt;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     @JsonBackReference
@@ -42,9 +49,11 @@ public class Post {
         title = postDTO.getTitle();
         content = postDTO.getContent();
         user = author;
+        createdAt = new Date();
+        updatedAt = new Date();
     }
 
-    public void Update(PostDTO postDTO) {
+    public void update(PostDTO postDTO) {
         if (postDTO.getImage_paths() != null)
             image_paths = postDTO.getImage_paths();
 
@@ -53,5 +62,7 @@ public class Post {
 
         if (postDTO.getContent() != null)
             content = postDTO.getContent();
+
+        updatedAt = new Date();
     }
 }
