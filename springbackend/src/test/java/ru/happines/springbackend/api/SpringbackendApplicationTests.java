@@ -1,4 +1,4 @@
-package ru.happines.springbackend;
+package ru.happines.springbackend.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

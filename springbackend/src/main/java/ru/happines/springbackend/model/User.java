@@ -3,6 +3,8 @@ package ru.happines.springbackend.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.happines.springbackend.dto.request.CreateUserDTO;
@@ -11,8 +13,10 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @Table(name = "scihub_users")
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
