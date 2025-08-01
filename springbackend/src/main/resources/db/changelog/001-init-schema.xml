@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.33.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1754019250318-1" author="ndavs">
+        <createSequence incrementBy="50" sequenceName="email_verification_tokens_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1754019250318-2" author="ndavs">
+        <createSequence incrementBy="50" sequenceName="password_recovery_tokens_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1754019250318-3" author="ndavs">
+        <createTable tableName="email_verification_tokens">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_email_verification_tokens"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date" type="DATETIME"/>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1754019250318-4" author="ndavs">
+        <createTable tableName="password_recovery_tokens">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_password_recovery_tokens"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date" type="DATETIME"/>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1754019250318-5" author="ndavs">
+        <createTable tableName="posts">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_posts"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_paths" type="TEXT"/>
+            <column name="title" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="TEXT"/>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1754019250318-6" author="ndavs">
+        <createTable tableName="roles">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_roles"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1754019250318-7" author="ndavs">
+        <createTable tableName="scihub_users">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_scihub_users"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hashed_password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_email_verified" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="middle_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1754019250318-8" author="ndavs">
+        <addUniqueConstraint columnNames="user_id" constraintName="uc_email_verification_tokens_user"
+                             tableName="email_verification_tokens"/>
+    </changeSet>
+    <changeSet id="1754019250318-9" author="ndavs">
+        <addUniqueConstraint columnNames="user_id" constraintName="uc_password_recovery_tokens_user"
+                             tableName="password_recovery_tokens"/>
+    </changeSet>
+    <changeSet id="1754019250318-10" author="ndavs">
+        <addUniqueConstraint columnNames="email" constraintName="uc_scihub_users_email" tableName="scihub_users"/>
+    </changeSet>
+    <changeSet id="1754019250318-11" author="ndavs">
+        <addUniqueConstraint columnNames="username" constraintName="uc_scihub_users_username" tableName="scihub_users"/>
+    </changeSet>
+    <changeSet id="1754019250318-12" author="ndavs">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="email_verification_tokens"
+                                 constraintName="FK_EMAIL_VERIFICATION_TOKENS_ON_USER" referencedColumnNames="id"
+                                 referencedTableName="scihub_users"/>
+    </changeSet>
+    <changeSet id="1754019250318-13" author="ndavs">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="password_recovery_tokens"
+                                 constraintName="FK_PASSWORD_RECOVERY_TOKENS_ON_USER" referencedColumnNames="id"
+                                 referencedTableName="scihub_users"/>
+    </changeSet>
+    <changeSet id="1754019250318-14" author="ndavs">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="posts" constraintName="FK_POSTS_ON_USER"
+                                 referencedColumnNames="id" referencedTableName="scihub_users"/>
+    </changeSet>
+    <changeSet id="1754019250318-15" author="ndavs">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="scihub_users"
+                                 constraintName="FK_SCIHUB_USERS_ON_ROLE" referencedColumnNames="id"
+                                 referencedTableName="roles"/>
+    </changeSet>
+
+</databaseChangeLog>
