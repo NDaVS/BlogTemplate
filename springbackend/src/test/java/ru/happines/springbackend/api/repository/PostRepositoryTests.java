@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import ru.happines.springbackend.dto.request.CreateUserDTO;
 import ru.happines.springbackend.dto.request.PostDTO;
 import ru.happines.springbackend.model.Post;
@@ -39,19 +38,13 @@ public class PostRepositoryTests {
     private PostDTO postDTO_2;
     private CreateUserDTO userDTO;
 
-    private Role createRole() {
-        Role role = new Role();
-        role.setName(RoleType.AUTHOR);
-        return roleRepository.save(role);
-    }
-
     private User createUserWithRole(CreateUserDTO dto, Role role) {
         User user = new User(dto);
         user.setRole(role);
         return userRepository.save(user);
     }
 
-    private void validatePost(Post post, PostDTO postDTO){
+    private void validatePost(Post post, PostDTO postDTO) {
         assertThat(post).isNotNull();
         assertThat(post.getId()).isGreaterThan(0);
         assertThat(post.getTitle()).isEqualTo(postDTO.getTitle());
@@ -87,7 +80,7 @@ public class PostRepositoryTests {
 
     @Test
     public void PostRepository_SaveAll_ReturnPostNotNull() {
-        Role role = createRole();
+        Role role = roleRepository.findByName(RoleType.AUTHOR).orElse(null);
         User user = createUserWithRole(userDTO, role);
 
         Post post = new Post(postDTO_1, user);
@@ -98,7 +91,7 @@ public class PostRepositoryTests {
 
     @Test
     public void PostRepository_FindAllByUserId_ReturnPostsNotNull() {
-        Role role = createRole();
+        Role role = roleRepository.findByName(RoleType.AUTHOR).orElse(null);
         User user = createUserWithRole(userDTO, role);
 
         Post post_1 = new Post(postDTO_1, user);
@@ -106,6 +99,7 @@ public class PostRepositoryTests {
 
         postRepository.saveAll(List.of(post_1, post_2));
         Page<Post> posts = postRepository.findAllByUser_Id(user.getId(), PageRequest.of(0, 10));
+
         assertThat(posts.getContent().size()).isEqualTo(2);
         validatePost(posts.getContent().getFirst(), postDTO_1);
         validatePost(posts.getContent().get(1), postDTO_2);

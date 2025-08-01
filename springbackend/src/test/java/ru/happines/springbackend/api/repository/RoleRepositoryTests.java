@@ -18,21 +18,8 @@ public class RoleRepositoryTests {
     private RoleRepository roleRepository;
 
     @Test
-    public void RoleRepository_SaveAll_ReturnSavedRole() {
-        Role role = Role.builder().name(RoleType.AUTHOR).build();
-
-        Role savedRole = roleRepository.save(role);
-
-        assertThat(savedRole).isNotNull();
-        assertThat(savedRole.getId()).isGreaterThan(0);
-    }
-
-    @Test
     public void RoleRepository_FindByName_ReturnRoleNotNull() {
-        Role role = Role.builder().name(RoleType.AUTHOR).build();
-        roleRepository.save(role);
-
-        Role roleByName = roleRepository.findByName(RoleType.AUTHOR).get();
+        Role roleByName = roleRepository.findByName(RoleType.AUTHOR).orElse(null);
         assertThat(roleByName).isNotNull();
     }
 }

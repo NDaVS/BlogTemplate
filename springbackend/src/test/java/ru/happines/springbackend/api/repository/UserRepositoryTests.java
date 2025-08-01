@@ -23,12 +23,6 @@ public class UserRepositoryTests {
 
     private CreateUserDTO userDTO;
 
-    private Role createRole() {
-        Role role = new Role();
-        role.setName(RoleType.AUTHOR);
-        return roleRepository.save(role);
-    }
-
     private User createUserWithRole(CreateUserDTO dto, Role role) {
         User user = new User(dto);
         user.setRole(role);
@@ -68,7 +62,7 @@ public class UserRepositoryTests {
 
     @Test
     public void UserRepository_SaveAll_ReturnSavedUser() {
-        Role role = createRole();
+        Role role = roleRepository.findByName(RoleType.AUTHOR).orElse(null);
         User savedUser = createUserWithRole(userDTO, role);
 
         validateUser(role, savedUser);
@@ -76,7 +70,7 @@ public class UserRepositoryTests {
 
     @Test
     public void UserRepository_FindByUsername_ReturnUserNotNull() {
-        Role role = createRole();
+        Role role = roleRepository.findByName(RoleType.AUTHOR).orElse(null);
         createUserWithRole(userDTO, role);
         User savedUser = userRepository.findByUsername(userDTO.getUsername()).orElse(null);
 
@@ -85,7 +79,7 @@ public class UserRepositoryTests {
 
     @Test
     public void UserRepository_FindByEmail_ReturnUserNotNull() {
-        Role role = createRole();
+        Role role = roleRepository.findByName(RoleType.AUTHOR).orElse(null);
         createUserWithRole(userDTO, role);
         User savedUser = userRepository.findByEmail(userDTO.getEmail()).orElse(null);
 
@@ -94,7 +88,7 @@ public class UserRepositoryTests {
 
     @Test
     public void UserRepository_IsExistsByEmail_ReturnTrue() {
-        Role role = createRole();
+        Role role = roleRepository.findByName(RoleType.AUTHOR).orElse(null);
         createUserWithRole(userDTO, role);
         boolean isUserExists = userRepository.existsByEmail(userDTO.getEmail());
 
