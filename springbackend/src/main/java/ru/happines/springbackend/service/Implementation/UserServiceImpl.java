@@ -1,16 +1,21 @@
 package ru.happines.springbackend.service.Implementation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.happines.springbackend.dto.request.CreateUserDTO;
+import ru.happines.springbackend.dto.request.auth.ResetPasswordDTO;
 import ru.happines.springbackend.exception.ErrorCode;
 import ru.happines.springbackend.exception.ServiceException;
 import ru.happines.springbackend.model.User;
 import ru.happines.springbackend.model.enums.RoleType;
 import ru.happines.springbackend.repository.RoleRepository;
 import ru.happines.springbackend.repository.UserRepository;
+import ru.happines.springbackend.security.jwt.JwtTokenProvider;
 import ru.happines.springbackend.service.UserService;
 
 import java.util.List;
@@ -19,9 +24,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     @Override
     public User findById(long id) {
@@ -40,6 +47,20 @@ public class UserServiceImpl implements UserService {
         user.setHashedPassword(passwordEncoder.encode(user.getHashedPassword()));
         userRepository.save(user);
         return user;
+    }
+
+    @Override
+    public void resetPassword(HttpServletRequest request, ResetPasswordDTO resetPasswordDTO) throws ServiceException {
+        String username = tokenProvider.getUserNameFromJwtToken(tokenProvider.getTokenFromRequest(request));
+        User user = findByUsername(username);
+        if (!resetPasswordDTO.getNewPassword().equals(resetPasswordDTO.getConfirmNewPassword())) {
+            throw new ServiceException(ErrorCode.BAD_REQUEST_PARAMS, "New  and confirmation passwords are not equal");
+        }
+
+        user.setHashedPassword(passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
+        userRepository.save(user);
+
+        logger.debug("Reset password for user {}", username);
     }
 
     @Override

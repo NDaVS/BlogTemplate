@@ -1,10 +1,11 @@
 package ru.happines.springbackend.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ru.happines.springbackend.dto.request.auth.ResetPasswordDTO;
+import ru.happines.springbackend.exception.ServiceException;
 import ru.happines.springbackend.model.User;
 import ru.happines.springbackend.service.UserService;
 
@@ -25,6 +26,14 @@ public class UserController {
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
         return userService.findById(id);
+    }
+
+    @PostMapping("password/reset")
+    public ResponseEntity<Void> resetPassword(HttpServletRequest request,
+                                              @RequestBody ResetPasswordDTO resetPasswordDTO) throws ServiceException {
+        userService.resetPassword(request, resetPasswordDTO);
+
+        return ResponseEntity.ok().build();
     }
 
 

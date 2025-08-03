@@ -1,7 +1,6 @@
 package ru.happines.springbackend.security.matcher;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
@@ -28,6 +27,6 @@ public class SkipPathRequestMatcher implements RequestMatcher {
 
     @Override
     public boolean matches(final HttpServletRequest request) {
-        return !matchers.matches(request);
+        return matchers.matches(request);
     }
 }

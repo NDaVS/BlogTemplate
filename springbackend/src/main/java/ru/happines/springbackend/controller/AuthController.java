@@ -15,7 +15,7 @@ import ru.happines.springbackend.model.User;
 import ru.happines.springbackend.service.AuthService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -28,16 +28,11 @@ public class AuthController {
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
-    @PostMapping("password/reset")
-    public ResponseEntity<Void> resetPassword(HttpServletRequest request,
-                                              @RequestBody ResetPasswordDTO resetPasswordDTO) throws ServiceException {
-        authService.resetPassword(request, resetPasswordDTO);
 
-        return ResponseEntity.ok().build();
-    }
 
     @PostMapping("/password/recovery")
     public ResponseEntity<Void> recoveryPassword(@RequestParam String username) throws ServiceException {
+
         authService.sendPasswordRecoveryToken(username);
 
         return ResponseEntity.ok().build();

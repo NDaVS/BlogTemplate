@@ -77,8 +77,8 @@ public class SecurityConfiguration {
                 .sessionManagement(configurer -> configurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(SIGNIN_ENTRY_POINT).permitAll()
-                        .requestMatchers(SIGNUP_ENTRY_POINT).permitAll()
+//                        .requestMatchers(SIGNIN_ENTRY_POINT).permitAll()
+//                        .requestMatchers(SIGNUP_ENTRY_POINT).permitAll()
                         .requestMatchers(AUTH_ENTRY_POINT).permitAll() // вынести смену пароля на проверку токена (см бэклог)
                         .requestMatchers(SWAGGER_ENTRY_POINT).permitAll()
                         .requestMatchers(API_DOCS_ENTRY_POINT).permitAll()
@@ -115,7 +115,7 @@ public class SecurityConfiguration {
     }
 
     protected TokenAuthenticationFilter buildTokenAuthenticationFilter() {
-        List<String> pathToSkip = new ArrayList<>(Arrays.asList(SIGNIN_ENTRY_POINT, AUTH_ENTRY_POINT, SIGNUP_ENTRY_POINT,
+        List<String> pathToSkip = new ArrayList<>(Arrays.asList(AUTH_ENTRY_POINT,
                 SWAGGER_ENTRY_POINT, API_DOCS_ENTRY_POINT, TOKEN_REFRESH_ENTRY_POINT));
         SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathToSkip);
         TokenAuthenticationFilter filter = new TokenAuthenticationFilter(jwtTokenProvider, matcher, failureHandler);

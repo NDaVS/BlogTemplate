@@ -28,13 +28,11 @@ import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final UserService userService;
     private final PasswordRecoveryTokenRepository passwordRecoveryTokenRepository;
     private final PasswordEncoder encoder;
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
-    private final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     @Value("${spring.security.recovery.user.tokenExpirationTime}")
     private Long tokenExpirationTime;
@@ -44,7 +42,6 @@ public class AuthServiceImpl implements AuthService {
                            UserRepository userRepository,
                            PasswordRecoveryTokenRepository passwordRecoveryTokenRepository,
                            EmailVerificationTokenRepository emailVerificationTokenRepository) {
-        this.tokenProvider = tokenProvider;
         this.userService = userService;
         this.userRepository = userRepository;
         this.passwordRecoveryTokenRepository = passwordRecoveryTokenRepository;
@@ -64,19 +61,7 @@ public class AuthServiceImpl implements AuthService {
         return user;
     }
 
-    @Override
-    public void resetPassword(HttpServletRequest request, ResetPasswordDTO resetPasswordDTO) throws ServiceException {
-        String username = tokenProvider.getUserNameFromJwtToken(tokenProvider.getTokenFromRequest(request));
-        User user = findUserByUsername(username);
-        if (!resetPasswordDTO.getNewPassword().equals(resetPasswordDTO.getConfirmNewPassword())) {
-            throw new ServiceException(ErrorCode.BAD_REQUEST_PARAMS, "New  and confirmation passwords are not equal");
-        }
 
-        user.setHashedPassword(encoder.encode(resetPasswordDTO.getNewPassword()));
-        userRepository.save(user);
-
-        logger.debug("Reset password for user {}", username);
-    }
 
     @Override
     public void sendPasswordRecoveryToken(String username) throws ServiceException {
