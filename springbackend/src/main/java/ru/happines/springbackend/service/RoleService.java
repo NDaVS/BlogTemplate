@@ -6,9 +6,10 @@ import ru.happines.springbackend.model.enums.RoleType;
 import java.util.List;
 
 public interface RoleService {
+    @Deprecated
     Role findById(long id);
-
+    @Deprecated
     List<RoleType> findAllNames();
-
-    Role setRole(long userId, RoleType roleType);
+    // возвожно стоит сделать назначение роли по юзернейму.
+    void setRole(String username, RoleType roleType);
 }

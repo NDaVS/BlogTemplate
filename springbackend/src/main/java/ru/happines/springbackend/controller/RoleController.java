@@ -29,12 +29,12 @@ public class RoleController {
 
     @PatchMapping
     public ResponseEntity<Role> updateRole(
-            @RequestParam("user_id") Long userId,
+            @RequestParam("username") String username,
             @RequestParam("role_type") RoleType roleType
     ) {
-        Role role = roleService.setRole(userId, roleType);
+        roleService.setRole(username, roleType);
 
-        return ResponseEntity.status(HttpStatus.OK).body(role);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

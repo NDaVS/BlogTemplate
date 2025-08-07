@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.happines.springbackend.dto.request.CreateUserDTO;
 import ru.happines.springbackend.exception.ServiceException;
@@ -75,6 +74,7 @@ public class UserServiceTests {
 
         validateUser(role, foundUser);
     }
+
     @Test
     public void whenFindByUsername_thenReturnUser() throws ServiceException {
         String username = userDTO.getUsername();
@@ -97,7 +97,7 @@ public class UserServiceTests {
 
     @Test
     public void whenIsExistsByEmail_thenReturnTrue() throws ServiceException {
-        String email =  userDTO.getEmail();
+        String email = userDTO.getEmail();
 
         when(userRepository.existsByEmail(email)).thenReturn(Boolean.TRUE);
         boolean isExist = userRepository.existsByEmail(email);
@@ -114,7 +114,7 @@ public class UserServiceTests {
 
         User savedUser = userRepository.save(new_user);
 
-        validateUser(role,  savedUser);
+        validateUser(role, savedUser);
     }
 
     //Reset Password (idk for now)

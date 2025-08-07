@@ -28,17 +28,15 @@ public class RoleServiceImp implements RoleService {
     }
 
     @Override
-    public Role setRole(long userId, RoleType roleType) {
+    public void setRole(String username, RoleType roleType) {
         User user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new IllegalStateException("User with ID: " + userId + " - is not found"));
+                .findByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("User with username: " + username + " - is not found"));
         Role role = roleRepository
                 .findByName(roleType)
-                .orElseThrow(() -> new IllegalStateException("Role" + roleType + " is not found"));
+                .orElseThrow(() -> new IllegalStateException("Role " + roleType.name() + " is not found"));
         user.setRole(role);
 
         userRepository.save(user);
-
-        return role;
     }
 }
