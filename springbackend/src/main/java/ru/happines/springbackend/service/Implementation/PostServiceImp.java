@@ -21,9 +21,9 @@ public class PostServiceImp implements PostService {
     public Post create(PostDTO postDTO) {
         Post post = new Post(
                 postDTO,
-                userRepository.findById(postDTO.getUser_id())
+                userRepository.findByUsername(postDTO.getUsername())
                         .orElseThrow(
-                                () -> new IllegalArgumentException("There is no user with id: " + postDTO.getUser_id())
+                                () -> new IllegalArgumentException("There is no user with username " + postDTO.getUsername())
                         )
         );
         postRepository.save(post);
@@ -71,7 +71,7 @@ public class PostServiceImp implements PostService {
     }
 
     @Override
-    public Page<Post> findAllByUserId(long userId, Pageable pageable) {
-        return postRepository.findAllByUser_Id(userId, pageable);
+    public Page<Post> findAllByUsername(String username, Pageable pageable) {
+        return postRepository.findAllByUser_Username(username, pageable);
     }
 }

@@ -14,6 +14,6 @@ import java.util.List;
 public class PostDTO {
     private String title;
     private String content;
-    private long user_id;
+    private String username;
     private List<String> image_paths;
 }

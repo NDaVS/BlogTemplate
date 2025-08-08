@@ -7,7 +7,5 @@ import ru.happines.springbackend.model.Post;
 import ru.happines.springbackend.model.User;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Page<Post> findAllByUser_Id(Long id, Pageable pageable);
-
-    Page<Post> findAllByUser(User user, Pageable pageable);
+    Page<Post> findAllByUser_Username(String userUsername, Pageable pageable);
 }

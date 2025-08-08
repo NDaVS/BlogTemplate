@@ -36,11 +36,11 @@ public class PostController {
         return ResponseEntity.ok(postMapper.toDto(postService.findById(id)));
     }
 
-    @GetMapping("/by/user/{userId}")
-    public ResponseEntity<Page<PostResponseDTO>> findByUserId(@PathVariable long userId,
+    @GetMapping("/by/user/{username}")
+    public ResponseEntity<Page<PostResponseDTO>> findByUserId(@PathVariable String username,
                                                               @RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
-        Page<Post> posts = postService.findAllByUserId(userId, PageRequest.of(page, size, Sort.by("createdAt").descending()));
+        Page<Post> posts = postService.findAllByUsername(username, PageRequest.of(page, size, Sort.by("createdAt").descending()));
 
         return ResponseEntity.ok(posts.map(postMapper::toDto));// проверить формат ответа
     }

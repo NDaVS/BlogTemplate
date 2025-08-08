@@ -19,6 +19,6 @@ public interface PostService {
 
     Page<Post> findAll(Pageable pageable);
 
-    Page<Post> findAllByUserId(long userId, Pageable pageable);
+    Page<Post> findAllByUsername(String username, Pageable pageable);
 
 }

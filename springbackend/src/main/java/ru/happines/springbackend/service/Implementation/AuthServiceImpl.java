@@ -1,15 +1,11 @@
 package ru.happines.springbackend.service.Implementation;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.happines.springbackend.dto.request.CreateUserDTO;
 import ru.happines.springbackend.dto.request.auth.RecoveryPasswordDTO;
-import ru.happines.springbackend.dto.request.auth.ResetPasswordDTO;
 import ru.happines.springbackend.exception.ErrorCode;
 import ru.happines.springbackend.exception.ServiceException;
 import ru.happines.springbackend.model.AbstractToken;
@@ -62,15 +58,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-
     @Override
-    public void sendPasswordRecoveryToken(String username) throws ServiceException {
+    public String sendPasswordRecoveryToken(String username) throws ServiceException {
         User user = findUserByUsername(username);
         String rawToken = generateRawToken();
         PasswordRecoveryToken token = new PasswordRecoveryToken(rawToken, user, tokenExpirationTime);
         passwordRecoveryTokenRepository.save(token);
 
-        System.out.println(rawToken); // дописать функционал работы с почтой
+        return rawToken;
     }
 
     @Override

@@ -54,19 +54,6 @@ public class PostRepositoryTests {
 
     @BeforeEach
     public void init() {
-        postDTO_1 = PostDTO.builder()
-                .title("title")
-                .content("content")
-                .user_id(1)
-                .image_paths(List.of("A", "B"))
-                .build();
-
-        postDTO_2 = PostDTO.builder()
-                .title("title2")
-                .content("content2")
-                .user_id(1)
-                .image_paths(List.of("AA", "BB"))
-                .build();
 
         userDTO = CreateUserDTO.builder()
                 .email("sample@email.com")
@@ -75,6 +62,20 @@ public class PostRepositoryTests {
                 .firstName("Peter")
                 .middleName("de")
                 .lastName("Happiness")
+                .build();
+
+        postDTO_1 = PostDTO.builder()
+                .title("title")
+                .content("content")
+                .username(userDTO.getUsername())
+                .image_paths(List.of("A", "B"))
+                .build();
+
+        postDTO_2 = PostDTO.builder()
+                .title("title2")
+                .content("content2")
+                .username(userDTO.getUsername())
+                .image_paths(List.of("AA", "BB"))
                 .build();
     }
 
@@ -90,7 +91,7 @@ public class PostRepositoryTests {
     }
 
     @Test
-    public void PostRepository_FindAllByUserId_ReturnPostsNotNull() {
+    public void PostRepository_FindAllByUsername_ReturnPostsNotNull() {
         Role role = roleRepository.findByName(RoleType.AUTHOR).orElse(null);
         User user = createUserWithRole(userDTO, role);
 
@@ -98,7 +99,7 @@ public class PostRepositoryTests {
         Post post_2 = new Post(postDTO_2, user);
 
         postRepository.saveAll(List.of(post_1, post_2));
-        Page<Post> posts = postRepository.findAllByUser_Id(user.getId(), PageRequest.of(0, 10));
+        Page<Post> posts = postRepository.findAllByUser_Username(user.getUsername(), PageRequest.of(0, 10));
 
         assertThat(posts.getContent().size()).isEqualTo(2);
         validatePost(posts.getContent().getFirst(), postDTO_1);

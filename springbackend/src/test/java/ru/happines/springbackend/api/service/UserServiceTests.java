@@ -23,9 +23,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
     @Mock
-    private RoleRepository roleRepository;
-
-    @Mock
     private UserRepository userRepository;
 
     @InjectMocks
